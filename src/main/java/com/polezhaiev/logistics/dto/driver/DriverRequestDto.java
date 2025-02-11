@@ -1,4 +1,4 @@
-package com.polezhaiev.logistics.dto;
+package com.polezhaiev.logistics.dto.driver;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;

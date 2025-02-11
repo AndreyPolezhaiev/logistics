@@ -1,7 +1,7 @@
 package com.polezhaiev.logistics.service.driver;
 
-import com.polezhaiev.logistics.dto.DriverRequestDto;
-import com.polezhaiev.logistics.dto.DriverResponseDto;
+import com.polezhaiev.logistics.dto.driver.DriverRequestDto;
+import com.polezhaiev.logistics.dto.driver.DriverResponseDto;
 import com.polezhaiev.logistics.exception.EntityNotFoundException;
 import com.polezhaiev.logistics.mapper.DriverMapper;
 import com.polezhaiev.logistics.model.Driver;
@@ -53,7 +53,7 @@ public class DriverServiceImpl implements DriverService {
     }
 
     @Override
-    public String delete(Long id) {
+    public String deleteById(Long id) {
         driverRepository.deleteById(id);
         return "Driver by id: " + id + " deleted";
     }
