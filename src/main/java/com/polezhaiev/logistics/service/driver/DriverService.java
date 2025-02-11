@@ -1,7 +1,7 @@
 package com.polezhaiev.logistics.service.driver;
 
-import com.polezhaiev.logistics.dto.DriverRequestDto;
-import com.polezhaiev.logistics.dto.DriverResponseDto;
+import com.polezhaiev.logistics.dto.driver.DriverRequestDto;
+import com.polezhaiev.logistics.dto.driver.DriverResponseDto;
 
 import java.util.List;
 
@@ -14,5 +14,5 @@ public interface DriverService {
 
     DriverResponseDto update(DriverRequestDto requestDto);
 
-    String delete(Long id);
+    String deleteById(Long id);
 }

@@ -1,0 +1,33 @@
+databaseChangeLog:
+  - changeSet:
+      id: 01-create-drivers-table
+      author: polezhaiev
+      changes:
+        - createTable:
+            tableName: drivers
+            columns:
+              - column:
+                  name: id
+                  type: bigInt
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  name: phone_number
+                  type: VARCHAR(255)
+              - column:
+                  name: email
+                  type: VARCHAR(255)
+              - column:
+                  name: truck
+                  type: VARCHAR(255)
+              - column:
+                  name: rate
+                  type: DECIMAL
+              - column:
+                  name: documents
+                  type: VARCHAR(255)

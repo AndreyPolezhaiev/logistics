@@ -1,4 +1,4 @@
-package com.polezhaiev.logistics.dto;
+package com.polezhaiev.logistics.dto.driver;
 
 import lombok.Data;
 
