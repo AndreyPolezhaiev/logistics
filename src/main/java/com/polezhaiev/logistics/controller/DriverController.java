@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class DriverController {
     private final DriverService driverService;
 
-    @PostMapping("/add")
+    @PostMapping("/")
     public DriverResponseDto save(@RequestBody @Valid DriverRequestDto requestDto) {
         return driverService.save(requestDto);
     }
@@ -36,12 +36,12 @@ public class DriverController {
         return driverService.findById(id);
     }
 
-    @PutMapping("/update")
+    @PutMapping("/")
     public DriverResponseDto update(@RequestBody @Valid DriverRequestDto requestDto) {
         return driverService.update(requestDto);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public String deleteById(@PathVariable Long id) {
         return driverService.deleteById(id);
     }
