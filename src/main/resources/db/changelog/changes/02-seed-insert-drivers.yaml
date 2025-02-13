@@ -1,0 +1,26 @@
+databaseChangeLog:
+  - changeSet:
+      id: 02-seed-insert-drivers
+      author: polezhaiev
+      changes:
+        - insert:
+            tableName: drivers
+            columns:
+              - column: { name: name, value: "John Smith" }
+              - column: { name: phone_number, value: "+18005551234" }
+              - column: { name: email, value: "john.smith@example.com" }
+              - column: { name: truck, value: "Volvo FH16" }
+        - insert:
+            tableName: drivers
+            columns:
+              - column: { name: name, value: "Michael Johnson" }
+              - column: { name: phone_number, value: "+18006667788" }
+              - column: { name: email, value: "michael.johnson@example.com" }
+              - column: { name: truck, value: "Scania R500" }
+        - insert:
+            tableName: drivers
+            columns:
+              - column: { name: name, value: "David Williams" }
+              - column: { name: phone_number, value: "+18007778899" }
+              - column: { name: email, value: "david.williams@example.com" }
+              - column: { name: truck, value: "MAN TGX" }
