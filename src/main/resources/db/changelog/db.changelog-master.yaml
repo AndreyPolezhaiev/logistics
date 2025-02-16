@@ -3,3 +3,7 @@ databaseChangeLog:
       file: db/changelog/changes/01-create-drivers-table.yaml
   - include:
       file: db/changelog/changes/02-seed-insert-drivers.yaml
+  - include:
+      file: db/changelog/changes/03-create-dispatchers-table.yaml
+  - include:
+      file: db/changelog/changes/04-seed-insert-dispatchers.yaml
