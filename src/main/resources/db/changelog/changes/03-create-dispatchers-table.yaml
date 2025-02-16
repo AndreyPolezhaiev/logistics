@@ -1,0 +1,36 @@
+databaseChangeLog:
+  - changeSet:
+      id: 03-create-dispatchers-table
+      author: polezhaiev
+      changes:
+        - createTable:
+            tableName: dispatchers
+            columns:
+              - column:
+                  name: id
+                  type: bigInt
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  name: mc
+                  type: bigInt
+              - column:
+                  name: company
+                  type: VARCHAR(255)
+              - column:
+                  name: email
+                  type: VARCHAR(255)
+              - column:
+                  name: phone_number
+                  type: VARCHAR(255)
+              - column:
+                  name: rate
+                  type: DECIMAL
+              - column:
+                  name: documents
+                  type: VARCHAR(255)

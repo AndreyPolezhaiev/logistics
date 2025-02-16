@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - changeSet:
+      id: 04-seed-insert-dispatchers
+      author: polezhaiev
+      changes:
+        - insert:
+            tableName: dispatchers
+            columns:
+              - column: { name: name, value: "Sam Sammon" }
+              - column: { name: mc, value: "777777" }
+              - column: { name: company, value: "Logity" }
+              - column: { name: phone_number, value: "+9393991909" }
+              - column: { name: email, value: "sam.sammon@example.com" }
+        - insert:
+            tableName: dispatchers
+            columns:
+              - column: { name: name, value: "Ariel Bennet" }
+              - column: { name: mc, value: "222222" }
+              - column: { name: company, value: "Suntrans express" }
+              - column: { name: phone_number, value: "+6573899983" }
+              - column: { name: email, value: "ariel.bennet@example.com" }
+        - insert:
+            tableName: dispatchers
+            columns:
+              - column: { name: name, value: "Robert Johnson" }
+              - column: { name: mc, value: "333333" }
+              - column: { name: company, value: "Freight logistics" }
+              - column: { name: phone_number, value: "+3587878029" }
+              - column: { name: email, value: "robert.johnson@example.com" }
