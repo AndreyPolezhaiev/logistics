@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: "logistics"
+
+  datasource:
+    url: "jdbc:postgresql://localhost:5432/logistics"
+    username: "postgres"
+    password: "1111"
+
+  jpa:
+    hibernate:
+      ddl-auto: "validate"
+    show-sql: "true"
+
+  security:
+    oauth2:
+      client:
+        registration:
+          cognito:
+            client-id: 64m3p20c88q9pnq35mb3r5kvan
+            client-secret: <client secret>
+            scope:
+              - phone
+              - openid
+              - email
+            # Spring Security by default uses a redirect-uri in the format: {baseUrl}/login/oauth2/code/{registrationId}
+            # For example: http://localhost:8080/login/oauth2/code/cognito
+            # See more: https://docs.spring.io/spring-security/reference/servlet/oauth2/login/core.html#oauth2login-sample-redirect-uri
+            redirect-uri: https://d84l1y8p4kdic.cloudfront.net
+        provider:
+          cognito:
+            issuerUri: https://cognito-idp.eu-north-1.amazonaws.com/eu-north-1_lMJpehcTN
+            user-name-attribute: username
+
+changeLogFile: "classpath:/db/changelog/db.changelog-master.yaml"
