@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: "logistics"
+
+  datasource:
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: "validate"
+    show-sql: "true"
+
+  security:
+    oauth2:
+      client:
+        registration:
+          cognito:
+            client-id: ${COGNITO_CLIENT_ID}
+            client-secret: ${COGNITO_CLIENT_SECRET}
+            scope:
+              - email
+              - openid
+            redirect-uri: https://d84l1y8p4kdic.cloudfront.net
+        provider:
+          cognito:
+            issuerUri: https://cognito-idp.${COGNITO_REGION}.amazonaws.com/${COGNITO_USER_POOL_ID}
+            user-name-attribute: username
+
+aws:
+  cognito:
+    user-pool-id: ${COGNITO_USER_POOL_ID}
+    client-id: ${COGNITO_CLIENT_ID}
+    client-secret: ${COGNITO_CLIENT_SECRET}
+    region: ${COGNITO_REGION}
+
+  credentials:
+    access-key: ${AWS_ACCESS_KEY_ID}
+    secret-key: ${AWS_SECRET_ACCESS_KEY}

@@ -7,3 +7,5 @@ databaseChangeLog:
       file: db/changelog/changes/03-create-dispatchers-table.yaml
   - include:
       file: db/changelog/changes/04-seed-insert-dispatchers.yaml
+  - include:
+      file: db/changelog/changes/05-create-admins-table.yaml
