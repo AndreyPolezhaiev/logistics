@@ -30,7 +30,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // Диспетчеры и водители могут только читать
                         .requestMatchers(HttpMethod.GET, "/api/dispatcher/**").hasAnyAuthority("DISPATCHER", "ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/driver/**").hasAnyAuthority("DRIVER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/driver/**").hasAnyAuthority("DISPATCHER", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/auth/register-admin").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
                         // Только админ может создавать, обновлять и удалять

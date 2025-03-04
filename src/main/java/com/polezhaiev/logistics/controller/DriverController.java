@@ -26,7 +26,7 @@ public class DriverController {
         return driverService.save(requestDto);
     }
 
-    @GetMapping("/all")
+    @GetMapping("/getAll")
     public List<DriverResponseDto> findAll() {
         return driverService.findAll();
     }
@@ -36,7 +36,7 @@ public class DriverController {
         return driverService.findById(id);
     }
 
-    @PutMapping("/")
+    @PutMapping
     public DriverResponseDto update(@RequestBody @Valid DriverRequestDto requestDto) {
         return driverService.update(requestDto);
     }

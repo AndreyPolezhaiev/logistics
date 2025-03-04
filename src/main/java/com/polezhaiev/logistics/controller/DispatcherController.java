@@ -29,7 +29,7 @@ public class DispatcherController {
         return dispatcherService.save(requestDto);
     }
 
-    @GetMapping("/all")
+    @GetMapping("/getAll")
     public List<DispatcherResponseDto> findAll() {
         return dispatcherService.findAll();
     }
@@ -39,7 +39,7 @@ public class DispatcherController {
         return dispatcherService.findById(id);
     }
 
-    @PutMapping("/")
+    @PutMapping
     public DispatcherResponseDto update(@RequestBody @Valid DispatcherRequestDto requestDto) {
         return dispatcherService.update(requestDto);
     }
