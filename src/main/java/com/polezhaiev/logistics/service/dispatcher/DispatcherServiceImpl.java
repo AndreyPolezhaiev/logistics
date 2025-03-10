@@ -17,13 +17,6 @@ public class DispatcherServiceImpl implements DispatcherService {
     private final DispatcherMapper dispatcherMapper;
 
     @Override
-    public DispatcherResponseDto save(DispatcherRequestDto requestDto) {
-        Dispatcher dispatcher = dispatcherMapper.toModel(requestDto);
-        Dispatcher savedDispatcher = dispatcherRepository.save(dispatcher);
-        return dispatcherMapper.toDto(savedDispatcher);
-    }
-
-    @Override
     public List<DispatcherResponseDto> findAll() {
         return dispatcherRepository.findAll()
                 .stream()

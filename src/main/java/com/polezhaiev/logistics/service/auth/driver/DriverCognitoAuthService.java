@@ -1,36 +1,42 @@
-package com.polezhaiev.logistics.service.auth.admin;
+package com.polezhaiev.logistics.service.auth.driver;
 
 import com.polezhaiev.logistics.config.CognitoProperties;
-import com.polezhaiev.logistics.dto.admin.*;
-import com.polezhaiev.logistics.mapper.AdminMapper;
-import com.polezhaiev.logistics.model.Admin;
-import com.polezhaiev.logistics.repository.admin.AdminRepository;
-
+import com.polezhaiev.logistics.dto.driver.DriverLoginRequestDto;
+import com.polezhaiev.logistics.dto.driver.DriverLoginResponseDto;
+import com.polezhaiev.logistics.dto.driver.DriverRequestDto;
+import com.polezhaiev.logistics.dto.driver.DriverResponseDto;
+import com.polezhaiev.logistics.mapper.DriverMapper;
+import com.polezhaiev.logistics.model.Driver;
+import com.polezhaiev.logistics.repository.driver.DriverRepository;
+import io.github.cdimascio.dotenv.Dotenv;
+import jakarta.annotation.PostConstruct;
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
-
-import io.github.cdimascio.dotenv.Dotenv;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
-import software.amazon.awssdk.services.cognitoidentityprovider.model.*;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminAddUserToGroupRequest;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminCreateUserRequest;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminInitiateAuthRequest;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminInitiateAuthResponse;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminSetUserPasswordRequest;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.AttributeType;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.AuthFlowType;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.MessageActionType;
 
 @Service
 @RequiredArgsConstructor
-public class CognitoAuthService implements AuthService {
-
-    private final AdminRepository adminRepository;
-    private final AdminMapper adminMapper;
+public class DriverCognitoAuthService implements DriverAuthService {
+    private final DriverRepository driverRepository;
+    private final DriverMapper driverMapper;
     private final CognitoProperties cognitoProperties;
 
     private final Dotenv dotenv = Dotenv.load();
@@ -49,21 +55,21 @@ public class CognitoAuthService implements AuthService {
                 .credentialsProvider(StaticCredentialsProvider.create(credentials))
                 .build();
     }
+
     @Override
-    @Transactional
-    public AdminResponseDto registerAdmin(AdminRequestDto adminRequestDto) {
-        if (adminRepository.findByEmail(adminRequestDto.getEmail()).isPresent()) {
-            throw new RuntimeException("Admin with this email already exists.");
+    public DriverResponseDto registerDriver(DriverRequestDto driverRequestDto) {
+        if (driverRepository.findByEmail(driverRequestDto.getEmail()).isPresent()) {
+            throw new RuntimeException("Driver with this email already exists.");
         }
 
         // ✅ 1. Создаем пользователя в AWS Cognito
         AdminCreateUserRequest cognitoRequest = AdminCreateUserRequest.builder()
                 .userPoolId(cognitoProperties.getUserPoolId())
-                .username(adminRequestDto.getEmail())
-                .temporaryPassword(adminRequestDto.getPassword()) // Временный пароль
+                .username(driverRequestDto.getEmail())
+                .temporaryPassword(driverRequestDto.getPassword()) // Временный пароль
                 .userAttributes(
-                        AttributeType.builder().name("email").value(adminRequestDto.getEmail()).build(),
-                        AttributeType.builder().name("name").value(adminRequestDto.getName()).build()
+                        AttributeType.builder().name("email").value(driverRequestDto.getEmail()).build(),
+                        AttributeType.builder().name("name").value(driverRequestDto.getName()).build()
                 )
                 .messageAction(MessageActionType.SUPPRESS) // Отключаем email-уведомление
                 .build();
@@ -73,8 +79,8 @@ public class CognitoAuthService implements AuthService {
         // 2. Устанавливаем пароль как постоянный, чтобы не требовалась его смена
         AdminSetUserPasswordRequest setPasswordRequest = AdminSetUserPasswordRequest.builder()
                 .userPoolId(cognitoProperties.getUserPoolId())
-                .username(adminRequestDto.getEmail())
-                .password(adminRequestDto.getPassword())
+                .username(driverRequestDto.getEmail())
+                .password(driverRequestDto.getPassword())
                 .permanent(true)
                 .build();
 
@@ -83,25 +89,25 @@ public class CognitoAuthService implements AuthService {
         // ✅ 2. Добавляем пользователя в группу "ADMIN"
         AdminAddUserToGroupRequest groupRequest = AdminAddUserToGroupRequest.builder()
                 .userPoolId(cognitoProperties.getUserPoolId())
-                .username(adminRequestDto.getEmail())
-                .groupName("ADMIN")
+                .username(driverRequestDto.getEmail())
+                .groupName("DRIVER")
                 .build();
 
         cognitoClient.adminAddUserToGroup(groupRequest);
 
-        // ✅ 3. Сохраняем админа в базе данных
-        Admin admin = adminMapper.toModel(adminRequestDto);
-        adminRepository.save(admin);
+        // ✅ 3. Сохраняем диспетчера в базе данных
+        Driver driver = driverMapper.toModel(driverRequestDto);
+        driverRepository.save(driver);
 
-        return adminMapper.toDto(admin);
+        return driverMapper.toDto(driver);
     }
 
     @Override
-    public AdminLoginResponseDto authenticateAdmin(AdminLoginRequestDto loginRequestDto) {
-        // ✅ Проверяем, есть ли админ в БД
-        Optional<Admin> optionalAdmin = adminRepository.findByEmail(loginRequestDto.getEmail());
-        if (optionalAdmin.isEmpty()) {
-            throw new RuntimeException("Admin not found.");
+    public DriverLoginResponseDto authenticateDriver(DriverLoginRequestDto loginRequestDto) {
+        // ✅ Проверяем, есть ли диспетчер в БД
+        Optional<Driver> optionalDispatcher = driverRepository.findByEmail(loginRequestDto.getEmail());
+        if (optionalDispatcher.isEmpty()) {
+            throw new RuntimeException("Driver not found.");
         }
 
         // ✅ Отправляем запрос на Cognito для получения токена
@@ -125,7 +131,7 @@ public class CognitoAuthService implements AuthService {
 
         AdminInitiateAuthResponse authResponse = cognitoClient.adminInitiateAuth(authRequest);
 
-        return new AdminLoginResponseDto(authResponse.authenticationResult().accessToken());
+        return new DriverLoginResponseDto(authResponse.authenticationResult().accessToken());
     }
 
     private String calculateSecretHash(String username, String clientId, String clientSecret) {

@@ -5,7 +5,7 @@ import com.polezhaiev.logistics.dto.admin.AdminLoginResponseDto;
 import com.polezhaiev.logistics.dto.admin.AdminRequestDto;
 import com.polezhaiev.logistics.dto.admin.AdminResponseDto;
 
-public interface AuthService {
+public interface AdminAuthService {
     AdminResponseDto registerAdmin(AdminRequestDto adminRequestDto);
     AdminLoginResponseDto authenticateAdmin(AdminLoginRequestDto loginRequestDto);
 }

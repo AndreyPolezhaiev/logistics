@@ -5,8 +5,6 @@ import com.polezhaiev.logistics.dto.dispather.DispatcherResponseDto;
 import java.util.List;
 
 public interface DispatcherService {
-    DispatcherResponseDto save(DispatcherRequestDto requestDto);
-
     List<DispatcherResponseDto> findAll();
 
     DispatcherResponseDto findById(Long id);

@@ -13,6 +13,8 @@ public class DriverRequestDto {
     @Email
     private String email;
     @NotNull
+    private String password;
+    @NotNull
     private String truck;
     private Double rate;
     private String documents;

@@ -17,13 +17,6 @@ public class DriverServiceImpl implements DriverService {
     private final DriverMapper driverMapper;
 
     @Override
-    public DriverResponseDto save(DriverRequestDto requestDto) {
-        Driver driver = driverMapper.toModel(requestDto);
-        Driver savedDriver = driverRepository.save(driver);
-        return driverMapper.toDto(savedDriver);
-    }
-
-    @Override
     public List<DriverResponseDto> findAll() {
         return driverRepository.findAll()
                 .stream()

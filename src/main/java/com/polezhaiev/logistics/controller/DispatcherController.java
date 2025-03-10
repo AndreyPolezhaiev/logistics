@@ -24,11 +24,6 @@ import java.util.List;
 public class DispatcherController {
     private final DispatcherService dispatcherService;
 
-    @PostMapping("/")
-    public DispatcherResponseDto save(@RequestBody @Valid DispatcherRequestDto requestDto) {
-        return dispatcherService.save(requestDto);
-    }
-
     @GetMapping("/getAll")
     public List<DispatcherResponseDto> findAll() {
         return dispatcherService.findAll();
