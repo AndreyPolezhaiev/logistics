@@ -32,7 +32,11 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/dispatcher/**").hasAnyAuthority("DISPATCHER", "ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/driver/**").hasAnyAuthority("DISPATCHER", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/auth/register-admin").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/auth/login-admin").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/auth/register-dispatcher").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/auth/login-dispatcher").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/auth/register-driver").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/auth/login-driver").permitAll()
                         // Только админ может создавать, обновлять и удалять
                         .requestMatchers(HttpMethod.POST, "/api/**").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/**").hasAuthority("ADMIN")

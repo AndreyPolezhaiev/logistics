@@ -6,8 +6,6 @@ import com.polezhaiev.logistics.dto.driver.DriverResponseDto;
 import java.util.List;
 
 public interface DriverService {
-    DriverResponseDto save(DriverRequestDto requestDto);
-
     List<DriverResponseDto> findAll();
 
     DriverResponseDto findById(Long id);

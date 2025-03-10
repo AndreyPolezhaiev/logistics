@@ -21,11 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class DriverController {
     private final DriverService driverService;
 
-    @PostMapping("/")
-    public DriverResponseDto save(@RequestBody @Valid DriverRequestDto requestDto) {
-        return driverService.save(requestDto);
-    }
-
     @GetMapping("/getAll")
     public List<DriverResponseDto> findAll() {
         return driverService.findAll();

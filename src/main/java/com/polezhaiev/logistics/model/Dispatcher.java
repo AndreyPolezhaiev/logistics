@@ -21,6 +21,7 @@ public class Dispatcher {
     private String company;
     private String phoneNumber;
     private String email;
+    private String password;
     private BigDecimal rate;
     private String documents;
 }

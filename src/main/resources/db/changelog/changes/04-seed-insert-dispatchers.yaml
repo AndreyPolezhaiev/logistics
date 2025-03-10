@@ -11,6 +11,7 @@ databaseChangeLog:
               - column: { name: company, value: "Logity" }
               - column: { name: phone_number, value: "+9393991909" }
               - column: { name: email, value: "sam.sammon@example.com" }
+              - column: { name: password, value: "1111" }
         - insert:
             tableName: dispatchers
             columns:
@@ -19,6 +20,7 @@ databaseChangeLog:
               - column: { name: company, value: "Suntrans express" }
               - column: { name: phone_number, value: "+6573899983" }
               - column: { name: email, value: "ariel.bennet@example.com" }
+              - column: { name: password, value: "1111" }
         - insert:
             tableName: dispatchers
             columns:
@@ -27,3 +29,4 @@ databaseChangeLog:
               - column: { name: company, value: "Freight logistics" }
               - column: { name: phone_number, value: "+3587878029" }
               - column: { name: email, value: "robert.johnson@example.com" }
+              - column: { name: password, value: "1111" }
