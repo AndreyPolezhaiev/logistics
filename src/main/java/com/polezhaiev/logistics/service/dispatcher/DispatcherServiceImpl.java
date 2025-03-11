@@ -47,6 +47,6 @@ public class DispatcherServiceImpl implements DispatcherService {
     @Override
     public String deleteById(Long id) {
         dispatcherRepository.deleteById(id);
-        return "Driver by id: " + id + " deleted";
+        return "Dispatcher by id: " + id + " deleted";
     }
 }
