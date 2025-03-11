@@ -1,6 +1,10 @@
 package com.polezhaiev.logistics.controller;
 
 import com.polezhaiev.logistics.dto.admin.*;
+import com.polezhaiev.logistics.dto.broker.BrokerLoginRequestDto;
+import com.polezhaiev.logistics.dto.broker.BrokerLoginResponseDto;
+import com.polezhaiev.logistics.dto.broker.BrokerRequestDto;
+import com.polezhaiev.logistics.dto.broker.BrokerResponseDto;
 import com.polezhaiev.logistics.dto.dispather.DispatcherLoginRequestDto;
 import com.polezhaiev.logistics.dto.dispather.DispatcherLoginResponseDto;
 import com.polezhaiev.logistics.dto.dispather.DispatcherRequestDto;
@@ -10,6 +14,7 @@ import com.polezhaiev.logistics.dto.driver.DriverLoginResponseDto;
 import com.polezhaiev.logistics.dto.driver.DriverRequestDto;
 import com.polezhaiev.logistics.dto.driver.DriverResponseDto;
 import com.polezhaiev.logistics.service.auth.admin.AdminAuthService;
+import com.polezhaiev.logistics.service.auth.broker.BrokerAuthService;
 import com.polezhaiev.logistics.service.auth.dispatcher.DispatcherAuthService;
 import com.polezhaiev.logistics.service.auth.driver.DriverAuthService;
 import jakarta.validation.Valid;
@@ -25,6 +30,7 @@ public class AuthController {
     private final AdminAuthService adminAuthService;
     private final DispatcherAuthService dispatcherAuthService;
     private final DriverAuthService driverAuthService;
+    private final BrokerAuthService brokerAuthService;
 
     // ✅ Регистрация администратора
     @PostMapping("/register-admin")
@@ -58,7 +64,18 @@ public class AuthController {
 
     // ✅ Логин драйвера (получение JWT-токена)
     @PostMapping("/login-driver")
-    public ResponseEntity<DriverLoginResponseDto> loginDispatcher(@Valid @RequestBody DriverLoginRequestDto loginRequest) {
+    public ResponseEntity<DriverLoginResponseDto> loginDriver(@Valid @RequestBody DriverLoginRequestDto loginRequest) {
         return ResponseEntity.ok(driverAuthService.authenticateDriver(loginRequest));
+    }
+
+    @PostMapping("/register-broker")
+    public ResponseEntity<BrokerResponseDto> registerBroker(@Valid @RequestBody BrokerRequestDto request) {
+        return ResponseEntity.ok(brokerAuthService.registerBroker(request));
+    }
+
+    // ✅ Логин драйвера (получение JWT-токена)
+    @PostMapping("/login-broker")
+    public ResponseEntity<BrokerLoginResponseDto> loginBroker(@Valid @RequestBody BrokerLoginRequestDto loginRequest) {
+        return ResponseEntity.ok(brokerAuthService.authenticateBroker(loginRequest));
     }
 }

@@ -1,13 +1,13 @@
-package com.polezhaiev.logistics.service.auth.driver;
+package com.polezhaiev.logistics.service.auth.broker;
 
 import com.polezhaiev.logistics.config.CognitoProperties;
-import com.polezhaiev.logistics.dto.driver.DriverLoginRequestDto;
-import com.polezhaiev.logistics.dto.driver.DriverLoginResponseDto;
-import com.polezhaiev.logistics.dto.driver.DriverRequestDto;
-import com.polezhaiev.logistics.dto.driver.DriverResponseDto;
-import com.polezhaiev.logistics.mapper.DriverMapper;
-import com.polezhaiev.logistics.model.Driver;
-import com.polezhaiev.logistics.repository.driver.DriverRepository;
+import com.polezhaiev.logistics.dto.broker.BrokerLoginRequestDto;
+import com.polezhaiev.logistics.dto.broker.BrokerLoginResponseDto;
+import com.polezhaiev.logistics.dto.broker.BrokerRequestDto;
+import com.polezhaiev.logistics.dto.broker.BrokerResponseDto;
+import com.polezhaiev.logistics.mapper.BrokerMapper;
+import com.polezhaiev.logistics.model.Broker;
+import com.polezhaiev.logistics.repository.broker.BrokerRepository;
 import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.annotation.PostConstruct;
 import javax.crypto.Mac;
@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
@@ -34,9 +35,9 @@ import software.amazon.awssdk.services.cognitoidentityprovider.model.MessageActi
 
 @Service
 @RequiredArgsConstructor
-public class DriverCognitoAuthService implements DriverAuthService {
-    private final DriverRepository driverRepository;
-    private final DriverMapper driverMapper;
+public class BrokerCognitoAuthService implements BrokerAuthService{
+    private final BrokerRepository brokerRepository;
+    private final BrokerMapper brokerMapper;
     private final CognitoProperties cognitoProperties;
 
     private final Dotenv dotenv = Dotenv.load();
@@ -55,21 +56,21 @@ public class DriverCognitoAuthService implements DriverAuthService {
                 .credentialsProvider(StaticCredentialsProvider.create(credentials))
                 .build();
     }
-
     @Override
-    public DriverResponseDto registerDriver(DriverRequestDto driverRequestDto) {
-        if (driverRepository.findByEmail(driverRequestDto.getEmail()).isPresent()) {
-            throw new RuntimeException("Driver with this email already exists.");
+    @Transactional
+    public BrokerResponseDto registerBroker(BrokerRequestDto brokerRequestDto) {
+        if (brokerRepository.findByEmail(brokerRequestDto.getEmail()).isPresent()) {
+            throw new RuntimeException("Broker with this email already exists.");
         }
 
         // ✅ 1. Создаем пользователя в AWS Cognito
         AdminCreateUserRequest cognitoRequest = AdminCreateUserRequest.builder()
                 .userPoolId(cognitoProperties.getUserPoolId())
-                .username(driverRequestDto.getEmail())
-                .temporaryPassword(driverRequestDto.getPassword()) // Временный пароль
+                .username(brokerRequestDto.getEmail())
+                .temporaryPassword(brokerRequestDto.getPassword()) // Временный пароль
                 .userAttributes(
-                        AttributeType.builder().name("email").value(driverRequestDto.getEmail()).build(),
-                        AttributeType.builder().name("name").value(driverRequestDto.getName()).build()
+                        AttributeType.builder().name("email").value(brokerRequestDto.getEmail()).build(),
+                        AttributeType.builder().name("name").value(brokerRequestDto.getCompany()).build()
                 )
                 .messageAction(MessageActionType.SUPPRESS) // Отключаем email-уведомление
                 .build();
@@ -79,35 +80,35 @@ public class DriverCognitoAuthService implements DriverAuthService {
         // 2. Устанавливаем пароль как постоянный, чтобы не требовалась его смена
         AdminSetUserPasswordRequest setPasswordRequest = AdminSetUserPasswordRequest.builder()
                 .userPoolId(cognitoProperties.getUserPoolId())
-                .username(driverRequestDto.getEmail())
-                .password(driverRequestDto.getPassword())
+                .username(brokerRequestDto.getEmail())
+                .password(brokerRequestDto.getPassword())
                 .permanent(true)
                 .build();
 
         cognitoClient.adminSetUserPassword(setPasswordRequest);
 
-        // ✅ 2. Добавляем пользователя в группу "DRIVER"
+        // ✅ 2. Добавляем пользователя в группу "BROKER"
         AdminAddUserToGroupRequest groupRequest = AdminAddUserToGroupRequest.builder()
                 .userPoolId(cognitoProperties.getUserPoolId())
-                .username(driverRequestDto.getEmail())
-                .groupName("DRIVER")
+                .username(brokerRequestDto.getEmail())
+                .groupName("BROKER")
                 .build();
 
         cognitoClient.adminAddUserToGroup(groupRequest);
 
-        // ✅ 3. Сохраняем драйвера в базе данных
-        Driver driver = driverMapper.toModel(driverRequestDto);
-        driverRepository.save(driver);
+        // ✅ 3. Сохраняем брокера в базе данных
+        Broker broker = brokerMapper.toModel(brokerRequestDto);
+        brokerRepository.save(broker);
 
-        return driverMapper.toDto(driver);
+        return brokerMapper.toDto(broker);
     }
 
     @Override
-    public DriverLoginResponseDto authenticateDriver(DriverLoginRequestDto loginRequestDto) {
-        // ✅ Проверяем, есть ли драйвер в БД
-        Optional<Driver> optionalDispatcher = driverRepository.findByEmail(loginRequestDto.getEmail());
-        if (optionalDispatcher.isEmpty()) {
-            throw new RuntimeException("Driver not found.");
+    public BrokerLoginResponseDto authenticateBroker(BrokerLoginRequestDto loginRequestDto) {
+        // ✅ Проверяем, есть ли брокер в БД
+        Optional<Broker> optionalBroker = brokerRepository.findByEmail(loginRequestDto.getEmail());
+        if (optionalBroker.isEmpty()) {
+            throw new RuntimeException("Broker not found.");
         }
 
         // ✅ Отправляем запрос на Cognito для получения токена
@@ -131,7 +132,7 @@ public class DriverCognitoAuthService implements DriverAuthService {
 
         AdminInitiateAuthResponse authResponse = cognitoClient.adminInitiateAuth(authRequest);
 
-        return new DriverLoginResponseDto(authResponse.authenticationResult().accessToken());
+        return new BrokerLoginResponseDto(authResponse.authenticationResult().accessToken());
     }
 
     private String calculateSecretHash(String username, String clientId, String clientSecret) {
