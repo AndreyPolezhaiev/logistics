@@ -31,12 +31,15 @@ public class SecurityConfig {
                         // Диспетчеры и водители могут только читать
                         .requestMatchers(HttpMethod.GET, "/api/dispatcher/**").hasAnyAuthority("DISPATCHER", "ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/driver/**").hasAnyAuthority("DISPATCHER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/broker/**").hasAnyAuthority("DISPATCHER", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/auth/register-admin").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/login-admin").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/register-dispatcher").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/auth/login-dispatcher").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/register-driver").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/auth/login-driver").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/auth/register-broker").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/auth/login-broker").permitAll()
                         // Только админ может создавать, обновлять и удалять
                         .requestMatchers(HttpMethod.POST, "/api/**").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/**").hasAuthority("ADMIN")

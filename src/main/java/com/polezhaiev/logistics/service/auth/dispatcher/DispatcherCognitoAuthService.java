@@ -87,7 +87,7 @@ public class DispatcherCognitoAuthService implements DispatcherAuthService {
 
         cognitoClient.adminSetUserPassword(setPasswordRequest);
 
-        // ✅ 2. Добавляем пользователя в группу "ADMIN"
+        // ✅ 2. Добавляем пользователя в группу "DISPATCHER"
         AdminAddUserToGroupRequest groupRequest = AdminAddUserToGroupRequest.builder()
                 .userPoolId(cognitoProperties.getUserPoolId())
                 .username(dispatcherRequestDto.getEmail())
