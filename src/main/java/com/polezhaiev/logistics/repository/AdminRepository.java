@@ -1,4 +1,4 @@
-package com.polezhaiev.logistics.repository.admin;
+package com.polezhaiev.logistics.repository;
 
 import com.polezhaiev.logistics.model.Admin;
 import java.util.Optional;

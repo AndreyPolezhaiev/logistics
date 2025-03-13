@@ -5,7 +5,7 @@ import com.polezhaiev.logistics.dto.dispather.DispatcherResponseDto;
 import com.polezhaiev.logistics.exception.EntityNotFoundException;
 import com.polezhaiev.logistics.mapper.DispatcherMapper;
 import com.polezhaiev.logistics.model.Dispatcher;
-import com.polezhaiev.logistics.repository.dispatcher.DispatcherRepository;
+import com.polezhaiev.logistics.repository.DispatcherRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

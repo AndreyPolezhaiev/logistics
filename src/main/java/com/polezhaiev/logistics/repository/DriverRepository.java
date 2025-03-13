@@ -1,4 +1,4 @@
-package com.polezhaiev.logistics.repository.driver;
+package com.polezhaiev.logistics.repository;
 
 import com.polezhaiev.logistics.model.Driver;
 import org.springframework.data.jpa.repository.JpaRepository;

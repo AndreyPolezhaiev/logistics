@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 08-add-cognito-sub-to-brokers
+      author: polezhaiev
+      changes:
+        - addColumn:
+            tableName: brokers
+            columns:
+              - column:
+                  name: cognito_sub
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    unique: true

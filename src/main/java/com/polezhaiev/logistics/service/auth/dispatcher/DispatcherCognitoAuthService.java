@@ -7,7 +7,7 @@ import com.polezhaiev.logistics.dto.dispather.DispatcherRequestDto;
 import com.polezhaiev.logistics.dto.dispather.DispatcherResponseDto;
 import com.polezhaiev.logistics.mapper.DispatcherMapper;
 import com.polezhaiev.logistics.model.Dispatcher;
-import com.polezhaiev.logistics.repository.dispatcher.DispatcherRepository;
+import com.polezhaiev.logistics.repository.DispatcherRepository;
 import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
