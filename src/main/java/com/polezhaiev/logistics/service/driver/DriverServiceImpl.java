@@ -5,7 +5,7 @@ import com.polezhaiev.logistics.dto.driver.DriverResponseDto;
 import com.polezhaiev.logistics.exception.EntityNotFoundException;
 import com.polezhaiev.logistics.mapper.DriverMapper;
 import com.polezhaiev.logistics.model.Driver;
-import com.polezhaiev.logistics.repository.driver.DriverRepository;
+import com.polezhaiev.logistics.repository.DriverRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

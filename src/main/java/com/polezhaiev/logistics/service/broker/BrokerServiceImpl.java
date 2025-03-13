@@ -5,7 +5,7 @@ import com.polezhaiev.logistics.dto.broker.BrokerResponseDto;
 import com.polezhaiev.logistics.exception.EntityNotFoundException;
 import com.polezhaiev.logistics.mapper.BrokerMapper;
 import com.polezhaiev.logistics.model.Broker;
-import com.polezhaiev.logistics.repository.broker.BrokerRepository;
+import com.polezhaiev.logistics.repository.BrokerRepository;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

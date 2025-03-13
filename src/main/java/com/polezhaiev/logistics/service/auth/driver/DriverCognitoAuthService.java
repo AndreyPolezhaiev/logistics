@@ -7,7 +7,7 @@ import com.polezhaiev.logistics.dto.driver.DriverRequestDto;
 import com.polezhaiev.logistics.dto.driver.DriverResponseDto;
 import com.polezhaiev.logistics.mapper.DriverMapper;
 import com.polezhaiev.logistics.model.Driver;
-import com.polezhaiev.logistics.repository.driver.DriverRepository;
+import com.polezhaiev.logistics.repository.DriverRepository;
 import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.annotation.PostConstruct;
 import javax.crypto.Mac;

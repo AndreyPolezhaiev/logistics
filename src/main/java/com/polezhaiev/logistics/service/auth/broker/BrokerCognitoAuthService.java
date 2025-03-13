@@ -7,7 +7,7 @@ import com.polezhaiev.logistics.dto.broker.BrokerRequestDto;
 import com.polezhaiev.logistics.dto.broker.BrokerResponseDto;
 import com.polezhaiev.logistics.mapper.BrokerMapper;
 import com.polezhaiev.logistics.model.Broker;
-import com.polezhaiev.logistics.repository.broker.BrokerRepository;
+import com.polezhaiev.logistics.repository.BrokerRepository;
 import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.annotation.PostConstruct;
 import javax.crypto.Mac;
@@ -26,6 +26,8 @@ import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminAddUserToGroupRequest;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminCreateUserRequest;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminGetUserRequest;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminGetUserResponse;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminInitiateAuthRequest;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminInitiateAuthResponse;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminSetUserPasswordRequest;
@@ -96,8 +98,22 @@ public class BrokerCognitoAuthService implements BrokerAuthService{
 
         cognitoClient.adminAddUserToGroup(groupRequest);
 
-        // ✅ 3. Сохраняем брокера в базе данных
+        AdminGetUserRequest getUserRequest = AdminGetUserRequest.builder()
+                .userPoolId(cognitoProperties.getUserPoolId())
+                .username(brokerRequestDto.getEmail())
+                .build();
+
+        AdminGetUserResponse getUserResponse = cognitoClient.adminGetUser(getUserRequest);
+
+        String cognitoSub = getUserResponse.userAttributes().stream()
+                .filter(attr -> attr.name().equals("sub"))
+                .findFirst()
+                .map(AttributeType::value)
+                .orElseThrow(() -> new RuntimeException("sub not found for user"));
+
+// Сохраняем брокера в БД
         Broker broker = brokerMapper.toModel(brokerRequestDto);
+        broker.setCognitoSub(cognitoSub); // Сохраняем sub
         brokerRepository.save(broker);
 
         return brokerMapper.toDto(broker);

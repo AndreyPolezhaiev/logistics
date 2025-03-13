@@ -4,7 +4,7 @@ import com.polezhaiev.logistics.config.CognitoProperties;
 import com.polezhaiev.logistics.dto.admin.*;
 import com.polezhaiev.logistics.mapper.AdminMapper;
 import com.polezhaiev.logistics.model.Admin;
-import com.polezhaiev.logistics.repository.admin.AdminRepository;
+import com.polezhaiev.logistics.repository.AdminRepository;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;

@@ -1,4 +1,4 @@
-package com.polezhaiev.logistics.repository.dispatcher;
+package com.polezhaiev.logistics.repository;
 
 import com.polezhaiev.logistics.model.Dispatcher;
 import org.springframework.data.jpa.repository.JpaRepository;

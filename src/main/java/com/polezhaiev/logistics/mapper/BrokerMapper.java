@@ -12,5 +12,6 @@ public interface BrokerMapper {
     BrokerResponseDto toDto(Broker broker);
 
     @Mapping(source = "password", target = "password")
+    @Mapping(target = "cognitoSub", ignore = true)
     Broker toModel(BrokerRequestDto requestDto);
 }
