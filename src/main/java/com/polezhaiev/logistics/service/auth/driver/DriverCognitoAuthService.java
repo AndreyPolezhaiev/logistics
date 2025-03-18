@@ -62,21 +62,19 @@ public class DriverCognitoAuthService implements DriverAuthService {
             throw new RuntimeException("Driver with this email already exists.");
         }
 
-        // ✅ 1. Создаем пользователя в AWS Cognito
         AdminCreateUserRequest cognitoRequest = AdminCreateUserRequest.builder()
                 .userPoolId(cognitoProperties.getUserPoolId())
                 .username(driverRequestDto.getEmail())
-                .temporaryPassword(driverRequestDto.getPassword()) // Временный пароль
+                .temporaryPassword(driverRequestDto.getPassword())
                 .userAttributes(
                         AttributeType.builder().name("email").value(driverRequestDto.getEmail()).build(),
                         AttributeType.builder().name("name").value(driverRequestDto.getName()).build()
                 )
-                .messageAction(MessageActionType.SUPPRESS) // Отключаем email-уведомление
+                .messageAction(MessageActionType.SUPPRESS)
                 .build();
 
         cognitoClient.adminCreateUser(cognitoRequest);
 
-        // 2. Устанавливаем пароль как постоянный, чтобы не требовалась его смена
         AdminSetUserPasswordRequest setPasswordRequest = AdminSetUserPasswordRequest.builder()
                 .userPoolId(cognitoProperties.getUserPoolId())
                 .username(driverRequestDto.getEmail())
@@ -86,7 +84,6 @@ public class DriverCognitoAuthService implements DriverAuthService {
 
         cognitoClient.adminSetUserPassword(setPasswordRequest);
 
-        // ✅ 2. Добавляем пользователя в группу "DRIVER"
         AdminAddUserToGroupRequest groupRequest = AdminAddUserToGroupRequest.builder()
                 .userPoolId(cognitoProperties.getUserPoolId())
                 .username(driverRequestDto.getEmail())
@@ -95,7 +92,6 @@ public class DriverCognitoAuthService implements DriverAuthService {
 
         cognitoClient.adminAddUserToGroup(groupRequest);
 
-        // ✅ 3. Сохраняем драйвера в базе данных
         Driver driver = driverMapper.toModel(driverRequestDto);
         driverRepository.save(driver);
 
@@ -104,13 +100,11 @@ public class DriverCognitoAuthService implements DriverAuthService {
 
     @Override
     public DriverLoginResponseDto authenticateDriver(DriverLoginRequestDto loginRequestDto) {
-        // ✅ Проверяем, есть ли драйвер в БД
-        Optional<Driver> optionalDispatcher = driverRepository.findByEmail(loginRequestDto.getEmail());
-        if (optionalDispatcher.isEmpty()) {
+        Optional<Driver> driver = driverRepository.findByEmail(loginRequestDto.getEmail());
+        if (driver.isEmpty()) {
             throw new RuntimeException("Driver not found.");
         }
 
-        // ✅ Отправляем запрос на Cognito для получения токена
         Map<String, String> authParams = new HashMap<>();
         authParams.put("USERNAME", loginRequestDto.getEmail());
         authParams.put("PASSWORD", loginRequestDto.getPassword());

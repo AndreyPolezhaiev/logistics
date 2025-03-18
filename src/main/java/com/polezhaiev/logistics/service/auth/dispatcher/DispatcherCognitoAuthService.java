@@ -63,21 +63,19 @@ public class DispatcherCognitoAuthService implements DispatcherAuthService {
             throw new RuntimeException("Dispatcher with this email already exists.");
         }
 
-        // ✅ 1. Создаем пользователя в AWS Cognito
         AdminCreateUserRequest cognitoRequest = AdminCreateUserRequest.builder()
                 .userPoolId(cognitoProperties.getUserPoolId())
                 .username(dispatcherRequestDto.getEmail())
-                .temporaryPassword(dispatcherRequestDto.getPassword()) // Временный пароль
+                .temporaryPassword(dispatcherRequestDto.getPassword())
                 .userAttributes(
                         AttributeType.builder().name("email").value(dispatcherRequestDto.getEmail()).build(),
                         AttributeType.builder().name("name").value(dispatcherRequestDto.getName()).build()
                 )
-                .messageAction(MessageActionType.SUPPRESS) // Отключаем email-уведомление
+                .messageAction(MessageActionType.SUPPRESS)
                 .build();
 
         cognitoClient.adminCreateUser(cognitoRequest);
 
-        // 2. Устанавливаем пароль как постоянный, чтобы не требовалась его смена
         AdminSetUserPasswordRequest setPasswordRequest = AdminSetUserPasswordRequest.builder()
                 .userPoolId(cognitoProperties.getUserPoolId())
                 .username(dispatcherRequestDto.getEmail())
@@ -87,7 +85,6 @@ public class DispatcherCognitoAuthService implements DispatcherAuthService {
 
         cognitoClient.adminSetUserPassword(setPasswordRequest);
 
-        // ✅ 2. Добавляем пользователя в группу "DISPATCHER"
         AdminAddUserToGroupRequest groupRequest = AdminAddUserToGroupRequest.builder()
                 .userPoolId(cognitoProperties.getUserPoolId())
                 .username(dispatcherRequestDto.getEmail())
@@ -96,7 +93,6 @@ public class DispatcherCognitoAuthService implements DispatcherAuthService {
 
         cognitoClient.adminAddUserToGroup(groupRequest);
 
-        // ✅ 3. Сохраняем диспетчера в базе данных
         Dispatcher dispatcher = dispatcherMapper.toModel(dispatcherRequestDto);
         dispatcherRepository.save(dispatcher);
 
@@ -105,13 +101,11 @@ public class DispatcherCognitoAuthService implements DispatcherAuthService {
 
     @Override
     public DispatcherLoginResponseDto authenticateDispatcher(DispatcherLoginRequestDto loginRequestDto) {
-        // ✅ Проверяем, есть ли диспетчер в БД
-        Optional<Dispatcher> optionalDispatcher = dispatcherRepository.findByEmail(loginRequestDto.getEmail());
-        if (optionalDispatcher.isEmpty()) {
+        Optional<Dispatcher> dispatcher = dispatcherRepository.findByEmail(loginRequestDto.getEmail());
+        if (dispatcher.isEmpty()) {
             throw new RuntimeException("Dispatcher not found.");
         }
 
-        // ✅ Отправляем запрос на Cognito для получения токена
         Map<String, String> authParams = new HashMap<>();
         authParams.put("USERNAME", loginRequestDto.getEmail());
         authParams.put("PASSWORD", loginRequestDto.getPassword());

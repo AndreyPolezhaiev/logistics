@@ -41,8 +41,8 @@ public class DriverServiceImpl implements DriverService {
         Driver updatedDriver = driverMapper.toModel(requestDto);
         updatedDriver.setId(driver.getId());
 
-        Driver savedUpdatedDriver = driverRepository.save(updatedDriver);
-        return driverMapper.toDto(savedUpdatedDriver);
+        Driver savedDriver = driverRepository.save(updatedDriver);
+        return driverMapper.toDto(savedDriver);
     }
 
     @Override

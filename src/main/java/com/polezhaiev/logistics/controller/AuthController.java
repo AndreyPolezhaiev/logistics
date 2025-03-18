@@ -32,50 +32,44 @@ public class AuthController {
     private final DriverAuthService driverAuthService;
     private final BrokerAuthService brokerAuthService;
 
-    // ✅ Регистрация администратора
     @PostMapping("/register-admin")
-    public ResponseEntity<AdminResponseDto> registerAdmin(@Valid @RequestBody AdminRequestDto request) {
-        return ResponseEntity.ok(adminAuthService.registerAdmin(request));
+    public ResponseEntity<AdminResponseDto> registerAdmin(@Valid @RequestBody AdminRequestDto requestDto) {
+        return ResponseEntity.ok(adminAuthService.registerAdmin(requestDto));
     }
 
-    // ✅ Логин администратора (получение JWT-токена)
     @PostMapping("/login-admin")
-    public ResponseEntity<AdminLoginResponseDto> loginAdmin(@Valid @RequestBody AdminLoginRequestDto loginRequest) {
-        return ResponseEntity.ok(adminAuthService.authenticateAdmin(loginRequest));
+    public ResponseEntity<AdminLoginResponseDto> loginAdmin(@Valid @RequestBody AdminLoginRequestDto requestDto) {
+        return ResponseEntity.ok(adminAuthService.authenticateAdmin(requestDto));
     }
 
-    // ✅ Регистрация диспетчера
     @PostMapping("/register-dispatcher")
-    public ResponseEntity<DispatcherResponseDto> registerDispatcher(@Valid @RequestBody DispatcherRequestDto request) {
-        return ResponseEntity.ok(dispatcherAuthService.registerDispatcher(request));
+    public ResponseEntity<DispatcherResponseDto> registerDispatcher(@Valid @RequestBody DispatcherRequestDto requestDto) {
+        return ResponseEntity.ok(dispatcherAuthService.registerDispatcher(requestDto));
     }
 
-    // ✅ Логин диспетчера (получение JWT-токена)
     @PostMapping("/login-dispatcher")
-    public ResponseEntity<DispatcherLoginResponseDto> loginDispatcher(@Valid @RequestBody DispatcherLoginRequestDto loginRequest) {
-        return ResponseEntity.ok(dispatcherAuthService.authenticateDispatcher(loginRequest));
+    public ResponseEntity<DispatcherLoginResponseDto> loginDispatcher(@Valid @RequestBody DispatcherLoginRequestDto requestDto) {
+        return ResponseEntity.ok(dispatcherAuthService.authenticateDispatcher(requestDto));
     }
 
-    // ✅ Регистрация драйвера
+
     @PostMapping("/register-driver")
-    public ResponseEntity<DriverResponseDto> registerDriver(@Valid @RequestBody DriverRequestDto request) {
-        return ResponseEntity.ok(driverAuthService.registerDriver(request));
+    public ResponseEntity<DriverResponseDto> registerDriver(@Valid @RequestBody DriverRequestDto requestDto) {
+        return ResponseEntity.ok(driverAuthService.registerDriver(requestDto));
     }
 
-    // ✅ Логин драйвера (получение JWT-токена)
     @PostMapping("/login-driver")
-    public ResponseEntity<DriverLoginResponseDto> loginDriver(@Valid @RequestBody DriverLoginRequestDto loginRequest) {
-        return ResponseEntity.ok(driverAuthService.authenticateDriver(loginRequest));
+    public ResponseEntity<DriverLoginResponseDto> loginDriver(@Valid @RequestBody DriverLoginRequestDto requestDto) {
+        return ResponseEntity.ok(driverAuthService.authenticateDriver(requestDto));
     }
 
     @PostMapping("/register-broker")
-    public ResponseEntity<BrokerResponseDto> registerBroker(@Valid @RequestBody BrokerRequestDto request) {
-        return ResponseEntity.ok(brokerAuthService.registerBroker(request));
+    public ResponseEntity<BrokerResponseDto> registerBroker(@Valid @RequestBody BrokerRequestDto requestDto) {
+        return ResponseEntity.ok(brokerAuthService.registerBroker(requestDto));
     }
 
-    // ✅ Логин драйвера (получение JWT-токена)
     @PostMapping("/login-broker")
-    public ResponseEntity<BrokerLoginResponseDto> loginBroker(@Valid @RequestBody BrokerLoginRequestDto loginRequest) {
-        return ResponseEntity.ok(brokerAuthService.authenticateBroker(loginRequest));
+    public ResponseEntity<BrokerLoginResponseDto> loginBroker(@Valid @RequestBody BrokerLoginRequestDto requestDto) {
+        return ResponseEntity.ok(brokerAuthService.authenticateBroker(requestDto));
     }
 }
