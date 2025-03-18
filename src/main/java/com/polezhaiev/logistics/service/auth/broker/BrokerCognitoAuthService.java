@@ -65,21 +65,19 @@ public class BrokerCognitoAuthService implements BrokerAuthService{
             throw new RuntimeException("Broker with this email already exists.");
         }
 
-        // ✅ 1. Создаем пользователя в AWS Cognito
         AdminCreateUserRequest cognitoRequest = AdminCreateUserRequest.builder()
                 .userPoolId(cognitoProperties.getUserPoolId())
                 .username(brokerRequestDto.getEmail())
-                .temporaryPassword(brokerRequestDto.getPassword()) // Временный пароль
+                .temporaryPassword(brokerRequestDto.getPassword())
                 .userAttributes(
                         AttributeType.builder().name("email").value(brokerRequestDto.getEmail()).build(),
                         AttributeType.builder().name("name").value(brokerRequestDto.getCompany()).build()
                 )
-                .messageAction(MessageActionType.SUPPRESS) // Отключаем email-уведомление
+                .messageAction(MessageActionType.SUPPRESS)
                 .build();
 
         cognitoClient.adminCreateUser(cognitoRequest);
 
-        // 2. Устанавливаем пароль как постоянный, чтобы не требовалась его смена
         AdminSetUserPasswordRequest setPasswordRequest = AdminSetUserPasswordRequest.builder()
                 .userPoolId(cognitoProperties.getUserPoolId())
                 .username(brokerRequestDto.getEmail())
@@ -89,7 +87,6 @@ public class BrokerCognitoAuthService implements BrokerAuthService{
 
         cognitoClient.adminSetUserPassword(setPasswordRequest);
 
-        // ✅ 2. Добавляем пользователя в группу "BROKER"
         AdminAddUserToGroupRequest groupRequest = AdminAddUserToGroupRequest.builder()
                 .userPoolId(cognitoProperties.getUserPoolId())
                 .username(brokerRequestDto.getEmail())
@@ -112,7 +109,7 @@ public class BrokerCognitoAuthService implements BrokerAuthService{
                 .orElseThrow(() -> new RuntimeException("sub not found for user"));
 
         Broker broker = brokerMapper.toModel(brokerRequestDto);
-        broker.setCognitoSub(cognitoSub); // Сохраняем sub
+        broker.setCognitoSub(cognitoSub);
         brokerRepository.save(broker);
 
         return brokerMapper.toDto(broker);
@@ -120,13 +117,11 @@ public class BrokerCognitoAuthService implements BrokerAuthService{
 
     @Override
     public BrokerLoginResponseDto authenticateBroker(BrokerLoginRequestDto loginRequestDto) {
-        // ✅ Проверяем, есть ли брокер в БД
-        Optional<Broker> optionalBroker = brokerRepository.findByEmail(loginRequestDto.getEmail());
-        if (optionalBroker.isEmpty()) {
+        Optional<Broker> broker = brokerRepository.findByEmail(loginRequestDto.getEmail());
+        if (broker.isEmpty()) {
             throw new RuntimeException("Broker not found.");
         }
 
-        // ✅ Отправляем запрос на Cognito для получения токена
         Map<String, String> authParams = new HashMap<>();
         authParams.put("USERNAME", loginRequestDto.getEmail());
         authParams.put("PASSWORD", loginRequestDto.getPassword());

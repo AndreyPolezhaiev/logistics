@@ -19,13 +19,13 @@ public interface FreightMapper {
             @Mapping(target = "broker", ignore = true),
             @Mapping(target = "totalMiles", ignore = true)
     })
-    Freight toModel(FreightRequestDto dto);
+    Freight toModel(FreightRequestDto requestDto);
 
     @Mappings({
             @Mapping(target = "id", ignore = true),
             @Mapping(target = "broker", ignore = true),
             @Mapping(target = "totalMiles", ignore = true)
     })
-    void updateModelFromDto(FreightRequestDto dto, @MappingTarget Freight freight);
+    void updateModelFromDto(FreightRequestDto requestDto, @MappingTarget Freight freight);
 
 }

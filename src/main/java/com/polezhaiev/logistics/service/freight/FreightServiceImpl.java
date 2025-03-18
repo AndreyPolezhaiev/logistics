@@ -58,9 +58,9 @@ public class FreightServiceImpl implements FreightService {
 
         existingFreight.setTotalMiles(requestDto.getMilesLoaded() + requestDto.getMilesEmpty());
 
-        Freight savedUpdatedFreight = freightRepository.save(existingFreight);
+        Freight savedFreight = freightRepository.save(existingFreight);
 
-        return freightMapper.toDto(savedUpdatedFreight);
+        return freightMapper.toDto(savedFreight);
     }
 
     @Override

@@ -101,13 +101,11 @@ public class DispatcherCognitoAuthService implements DispatcherAuthService {
 
     @Override
     public DispatcherLoginResponseDto authenticateDispatcher(DispatcherLoginRequestDto loginRequestDto) {
-        // ✅ Проверяем, есть ли диспетчер в БД
-        Optional<Dispatcher> optionalDispatcher = dispatcherRepository.findByEmail(loginRequestDto.getEmail());
-        if (optionalDispatcher.isEmpty()) {
+        Optional<Dispatcher> dispatcher = dispatcherRepository.findByEmail(loginRequestDto.getEmail());
+        if (dispatcher.isEmpty()) {
             throw new RuntimeException("Dispatcher not found.");
         }
 
-        // ✅ Отправляем запрос на Cognito для получения токена
         Map<String, String> authParams = new HashMap<>();
         authParams.put("USERNAME", loginRequestDto.getEmail());
         authParams.put("PASSWORD", loginRequestDto.getPassword());

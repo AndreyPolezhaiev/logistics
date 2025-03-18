@@ -25,10 +25,10 @@ public class FreightController {
     @PostMapping("/")
     public ResponseEntity<FreightResponseDto> addFreight(
             @AuthenticationPrincipal Jwt jwt,
-            @RequestBody @Valid FreightRequestDto freightRequestDto) {
+            @RequestBody @Valid FreightRequestDto requestDto) {
 
         Long brokerId = brokerContextService.getCurrentBrokerId(jwt);
-        FreightResponseDto responseDto = freightService.addFreight(brokerId, freightRequestDto);
+        FreightResponseDto responseDto = freightService.addFreight(brokerId, requestDto);
         return ResponseEntity.ok(responseDto);
     }
 
@@ -56,10 +56,10 @@ public class FreightController {
     public ResponseEntity<FreightResponseDto> update(
             @AuthenticationPrincipal Jwt jwt,
             @PathVariable Long freightId,
-            @RequestBody @Valid FreightRequestDto freightRequestDto) {
+            @RequestBody @Valid FreightRequestDto requestDto) {
 
         Long brokerId = brokerContextService.getCurrentBrokerId(jwt);
-        FreightResponseDto updatedFreight = freightService.update(brokerId, freightId, freightRequestDto);
+        FreightResponseDto updatedFreight = freightService.update(brokerId, freightId, requestDto);
         return ResponseEntity.ok(updatedFreight);
     }
 

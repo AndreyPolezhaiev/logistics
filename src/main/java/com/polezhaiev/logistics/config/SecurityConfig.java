@@ -41,10 +41,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Добавили CORS
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        // --- Публичные эндпоинты ---
                         .requestMatchers(HttpMethod.POST,
                                 "/api/auth/register-admin",
                                 "/api/auth/login-admin",
@@ -53,36 +52,29 @@ public class SecurityConfig {
                                 "/api/auth/login-broker"
                         ).permitAll()
 
-                        // --- Регистрация только для ADMIN ---
                         .requestMatchers(HttpMethod.POST,
                                 "/api/auth/register-dispatcher",
                                 "/api/auth/register-driver",
                                 "/api/auth/register-broker"
                         ).hasAuthority("ADMIN")
 
-                        // --- GET запросы для ADMIN и DISPATCHER ---
                         .requestMatchers(HttpMethod.GET,
                                 "/api/dispatcher/**",
                                 "/api/driver/**",
                                 "/api/broker/**"
                         ).hasAnyAuthority("DISPATCHER", "ADMIN")
 
-                        // --- POST для ADMIN (все, кроме freight) ---
                         .requestMatchers(HttpMethod.POST, ADMIN_PATHS).hasAuthority("ADMIN")
 
-                        // --- PUT для ADMIN (все, кроме freight) ---
                         .requestMatchers(HttpMethod.PUT, ADMIN_PATHS).hasAuthority("ADMIN")
 
-                        // --- DELETE для ADMIN (все, кроме freight) ---
                         .requestMatchers(HttpMethod.DELETE, ADMIN_PATHS).hasAuthority("ADMIN")
 
-                        // --- Freight: ADMIN + BROKER ---
                         .requestMatchers(HttpMethod.POST, FREIGHT_PATHS).hasAnyAuthority("ADMIN", "BROKER")
                         .requestMatchers(HttpMethod.PUT, FREIGHT_PATHS).hasAnyAuthority("ADMIN", "BROKER")
                         .requestMatchers(HttpMethod.DELETE, FREIGHT_PATHS).hasAnyAuthority("ADMIN", "BROKER")
                         .requestMatchers(HttpMethod.GET, FREIGHT_PATHS).hasAnyAuthority("ADMIN", "BROKER")
 
-                        // --- Все остальные запросы требуют авторизации ---
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -115,13 +107,13 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:8080")); // твой фронт
+        configuration.setAllowedOrigins(List.of("http://localhost:8080"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
-        configuration.setAllowCredentials(true); // если работаешь с авторизацией через куки/токен в заголовках
+        configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration); // на все эндпоинты
+        source.registerCorsConfiguration("/**", configuration);
 
         return source;
     }
