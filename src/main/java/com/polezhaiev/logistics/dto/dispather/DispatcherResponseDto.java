@@ -11,6 +11,5 @@ public class DispatcherResponseDto {
     private String email;
     private String phoneNumber;
     private Integer rate;
-    private String documents;
     private String password;
 }

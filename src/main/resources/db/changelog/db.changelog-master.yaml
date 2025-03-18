@@ -15,3 +15,7 @@ databaseChangeLog:
       file: db/changelog/changes/07-create-freights-table.yaml
   - include:
       file: db/changelog/changes/08-add-cognito-sub-to-brokers.yaml
+  - include:
+      file: db/changelog/changes/09-update-brokers-add-mc-remove-documents.yaml
+  - include:
+      file: db/changelog/changes/10-delete-documents-from-dispatchers.yaml
