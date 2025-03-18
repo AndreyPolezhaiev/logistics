@@ -23,5 +23,4 @@ public class DispatcherRequestDto {
     @NotNull
     private String phoneNumber;
     private Integer rate;
-    private String documents;
 }

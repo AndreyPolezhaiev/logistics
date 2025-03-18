@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: 10-delete-documents-from-dispatchers.yaml
+      author: polezhaiev
+      changes:
+        - dropColumn:
+            tableName: dispatchers
+            columnName: documents

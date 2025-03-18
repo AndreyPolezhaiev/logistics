@@ -23,5 +23,4 @@ public class Dispatcher {
     private String email;
     private String password;
     private BigDecimal rate;
-    private String documents;
 }
