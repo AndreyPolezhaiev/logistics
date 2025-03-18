@@ -1,0 +1,16 @@
+databaseChangeLog:
+  - changeSet:
+      id: 09-update-brokers-add-mc-remove-documents
+      author: polezhaiev
+      changes:
+        - addColumn:
+            tableName: brokers
+            columns:
+              - column:
+                  name: mc
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+        - dropColumn:
+            tableName: brokers
+            columnName: documents

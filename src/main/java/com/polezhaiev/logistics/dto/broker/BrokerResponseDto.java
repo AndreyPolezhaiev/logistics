@@ -8,5 +8,5 @@ public class BrokerResponseDto {
     private String company;
     private String phoneNumber;
     private String email;
-    private String documents;
+    private String mc;
 }

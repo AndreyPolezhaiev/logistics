@@ -111,7 +111,6 @@ public class BrokerCognitoAuthService implements BrokerAuthService{
                 .map(AttributeType::value)
                 .orElseThrow(() -> new RuntimeException("sub not found for user"));
 
-// Сохраняем брокера в БД
         Broker broker = brokerMapper.toModel(brokerRequestDto);
         broker.setCognitoSub(cognitoSub); // Сохраняем sub
         brokerRepository.save(broker);
