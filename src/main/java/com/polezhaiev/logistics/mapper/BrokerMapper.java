@@ -11,6 +11,8 @@ import org.mapstruct.Mapping;
 public interface BrokerMapper {
     BrokerResponseDto toDto(Broker broker);
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "freights", ignore = true)
     @Mapping(source = "password", target = "password")
     @Mapping(target = "cognitoSub", ignore = true)
     Broker toModel(BrokerRequestDto requestDto);

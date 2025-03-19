@@ -11,6 +11,7 @@ import org.mapstruct.Mapping;
 public interface DriverMapper {
     DriverResponseDto toDto(Driver driver);
 
+    @Mapping(target = "id", ignore = true)
     @Mapping(source = "password", target = "password")
     Driver toModel(DriverRequestDto requestDto);
 }

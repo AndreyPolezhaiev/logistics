@@ -11,6 +11,7 @@ import org.mapstruct.Mapping;
 public interface DispatcherMapper {
     DispatcherResponseDto toDto(Dispatcher dispatcher);
 
+    @Mapping(target = "id", ignore = true)
     @Mapping(source = "password", target = "password")
     Dispatcher toModel(DispatcherRequestDto requestDto);
 }

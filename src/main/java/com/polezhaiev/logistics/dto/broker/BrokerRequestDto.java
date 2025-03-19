@@ -18,6 +18,6 @@ public class BrokerRequestDto {
     @NotBlank(message = "Password is required")
     @Size(min = 6, message = "Password must be at least 6 characters long")
     private String password;
-    @NotBlank(message = "MC is required")
+    @NotNull(message = "MC is required")
     private Long mc;
 }
