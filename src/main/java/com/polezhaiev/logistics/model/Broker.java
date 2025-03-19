@@ -22,7 +22,7 @@ public class Broker {
     private String company;
     private String phoneNumber;
     private String email;
-    private String mc;
+    private Long mc;
     private String password;
     private String cognitoSub;
 

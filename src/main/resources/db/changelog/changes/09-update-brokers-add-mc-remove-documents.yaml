@@ -8,9 +8,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: mc
-                  type: varchar(255)
-                  constraints:
-                    nullable: false
+                  type: bigInt
         - dropColumn:
             tableName: brokers
             columnName: documents
