@@ -2,6 +2,8 @@ package com.polezhaiev.logistics.controller;
 
 import com.polezhaiev.logistics.dto.driver.DriverRequestDto;
 import com.polezhaiev.logistics.dto.driver.DriverResponseDto;
+import com.polezhaiev.logistics.dto.driver.DriverUpdateLocationRequestDto;
+import com.polezhaiev.logistics.dto.driver.DriverUpdateLocationResponseDto;
 import com.polezhaiev.logistics.service.driver.DriverService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -36,8 +39,19 @@ public class DriverController {
         return driverService.update(requestDto);
     }
 
+    @PutMapping("/location/{id}")
+    public DriverUpdateLocationResponseDto updateLocation(
+            @PathVariable Long id, @RequestBody @Valid DriverUpdateLocationRequestDto requestDto) {
+        return driverService.updateLocation(id, requestDto);
+    }
+
     @DeleteMapping("/{id}")
     public String deleteById(@PathVariable Long id) {
         return driverService.deleteById(id);
+    }
+
+    @GetMapping("/search")
+    public List<DriverResponseDto> findDriversByLocation(@RequestParam("location") String location) {
+        return driverService.findByLocation(location.trim());
     }
 }

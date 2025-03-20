@@ -21,6 +21,6 @@ public class Driver {
     private String email;
     private String password;
     private String truck;
+    private String location;
     private BigDecimal rate;
-    private String documents;
 }

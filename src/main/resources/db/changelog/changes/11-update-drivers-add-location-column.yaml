@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: 11-update-drivers-add-location-column
+      author: polezhaiev
+      changes:
+        - addColumn:
+            tableName: drivers
+            columns:
+              - column:
+                  name: location
+                  type: VARCHAR(100)

@@ -19,3 +19,7 @@ databaseChangeLog:
       file: db/changelog/changes/09-update-brokers-add-mc-remove-documents.yaml
   - include:
       file: db/changelog/changes/10-delete-documents-from-dispatchers.yaml
+  - include:
+      file: db/changelog/changes/11-update-drivers-add-location-column.yaml
+  - include:
+      file: db/changelog/changes/12-update-drivers-delete-documents-column.yaml
