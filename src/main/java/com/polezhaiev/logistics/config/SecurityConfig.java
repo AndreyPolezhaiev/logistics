@@ -64,6 +64,10 @@ public class SecurityConfig {
                                 "/api/broker/**"
                         ).hasAnyAuthority("DISPATCHER", "ADMIN")
 
+                        .requestMatchers(HttpMethod.PUT,
+                                "/api/driver/location/**"
+                        ).hasAnyAuthority("DISPATCHER", "ADMIN")
+
                         .requestMatchers(HttpMethod.POST, ADMIN_PATHS).hasAuthority("ADMIN")
 
                         .requestMatchers(HttpMethod.PUT, ADMIN_PATHS).hasAuthority("ADMIN")

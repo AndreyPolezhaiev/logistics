@@ -16,6 +16,7 @@ public class DriverRequestDto {
     private String password;
     @NotNull
     private String truck;
+    @NotNull
+    private String location;
     private Double rate;
-    private String documents;
 }

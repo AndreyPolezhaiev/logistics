@@ -93,6 +93,7 @@ public class DriverCognitoAuthService implements DriverAuthService {
         cognitoClient.adminAddUserToGroup(groupRequest);
 
         Driver driver = driverMapper.toModel(driverRequestDto);
+        driver.setLocation(driverRequestDto.getLocation().trim());
         driverRepository.save(driver);
 
         return driverMapper.toDto(driver);

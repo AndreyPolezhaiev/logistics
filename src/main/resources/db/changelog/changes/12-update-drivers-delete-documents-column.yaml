@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: 12-update-drivers-delete-documents-column
+      author: polezhaiev
+      changes:
+        - dropColumn:
+            tableName: drivers
+            columnName: documents
