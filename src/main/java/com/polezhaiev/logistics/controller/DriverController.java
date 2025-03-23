@@ -3,11 +3,11 @@ package com.polezhaiev.logistics.controller;
 import com.polezhaiev.logistics.dto.driver.DriverRequestDto;
 import com.polezhaiev.logistics.dto.driver.DriverResponseDto;
 import com.polezhaiev.logistics.dto.driver.DriverUpdateLocationRequestDto;
-import com.polezhaiev.logistics.dto.driver.DriverUpdateLocationResponseDto;
 import com.polezhaiev.logistics.service.driver.DriverService;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,13 +34,20 @@ public class DriverController {
         return driverService.findById(id);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<DriverResponseDto>> findDriversByLocation(
+            @RequestParam(value = "location") String location,
+            @RequestParam(defaultValue = "50") double radius) {
+        return ResponseEntity.ok(driverService.findDriversNearby(location, radius));
+    }
+
     @PutMapping
     public DriverResponseDto update(@RequestBody @Valid DriverRequestDto requestDto) {
         return driverService.update(requestDto);
     }
 
     @PutMapping("/location/{id}")
-    public DriverUpdateLocationResponseDto updateLocation(
+    public DriverResponseDto updateLocation(
             @PathVariable Long id, @RequestBody @Valid DriverUpdateLocationRequestDto requestDto) {
         return driverService.updateLocation(id, requestDto);
     }
@@ -48,10 +55,5 @@ public class DriverController {
     @DeleteMapping("/{id}")
     public String deleteById(@PathVariable Long id) {
         return driverService.deleteById(id);
-    }
-
-    @GetMapping("/search")
-    public List<DriverResponseDto> findDriversByLocation(@RequestParam("location") String location) {
-        return driverService.findByLocation(location.trim());
     }
 }

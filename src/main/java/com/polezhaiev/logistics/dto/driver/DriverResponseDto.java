@@ -11,5 +11,4 @@ public class DriverResponseDto {
     private String truck;
     private String location;
     private Double rate;
-    private String password;
 }
