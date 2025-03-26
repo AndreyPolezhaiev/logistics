@@ -23,3 +23,5 @@ databaseChangeLog:
       file: db/changelog/changes/11-update-drivers-add-location-column.yaml
   - include:
       file: db/changelog/changes/12-update-drivers-delete-documents-column.yaml
+  - include:
+      file: db/changelog/changes/13-add-indexes-email.yaml
