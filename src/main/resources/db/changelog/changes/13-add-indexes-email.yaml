@@ -1,0 +1,33 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-index-email-drivers
+      author: polezhaiev
+      changes:
+        - createIndex:
+            indexName: idx_drivers_email
+            tableName: drivers
+            columns:
+              - column:
+                  name: email
+
+  - changeSet:
+      id: create-index-email-brokers
+      author: polezhaiev
+      changes:
+        - createIndex:
+            indexName: idx_brokers_email
+            tableName: brokers
+            columns:
+              - column:
+                  name: email
+
+  - changeSet:
+      id: create-index-email-dispatchers
+      author: polezhaiev
+      changes:
+        - createIndex:
+            indexName: idx_dispatchers_email
+            tableName: dispatchers
+            columns:
+              - column:
+                  name: email
