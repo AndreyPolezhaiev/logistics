@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Flux;
 
 @RestController
 @RequiredArgsConstructor
@@ -35,10 +36,10 @@ public class DriverController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<DriverResponseDto>> findDriversByLocation(
+    public Flux<DriverResponseDto> findDriversByLocation(
             @RequestParam(value = "location") String location,
             @RequestParam(defaultValue = "50") double radius) {
-        return ResponseEntity.ok(driverService.findDriversNearby(location, radius));
+        return driverService.findDriversNearby(location, radius);
     }
 
     @PutMapping

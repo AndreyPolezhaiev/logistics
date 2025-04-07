@@ -4,52 +4,51 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.polezhaiev.logistics.dto.driver.LocationResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class LocationServiceImpl implements LocationService {
-    private static final String NOMINATIM_URL = "https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&q=";
 
-    private final RestTemplate restTemplate;
+    private final WebClient webClient;
     private final ObjectMapper objectMapper;
 
     @Override
-    public Optional<LocationResponseDto> getCoordinates(String location) {
-        try {
-            // Убираем запятые, если они есть, и кодируем в URL-формат
-            String formattedLocation = location.replace(",", " ");
-            String encodedLocation = URLEncoder.encode(formattedLocation, StandardCharsets.UTF_8);
+    public Mono<LocationResponseDto> getCoordinates(String location) {
+        String encodedLocation = URLEncoder.encode(location.replace(",", " "), StandardCharsets.UTF_8);
 
-            // Отправляем запрос в OSM
-            String response = restTemplate.getForObject(NOMINATIM_URL + encodedLocation, String.class);
-            JsonNode jsonNode = objectMapper.readTree(response);
-
-            // Проверяем, есть ли найденные локации
-            if (jsonNode.isArray() && !jsonNode.isEmpty()) {
-                // Берем первую найденную локацию (самую релевантную)
-                JsonNode firstResult = jsonNode.get(0);
-                double latitude = firstResult.get("lat").asDouble();
-                double longitude = firstResult.get("lon").asDouble();
-                String displayName = firstResult.get("display_name").asText();
-
-                return Optional.of(LocationResponseDto.builder()
-                        .latitude(latitude)
-                        .longitude(longitude)
-                        .displayName(displayName)
-                        .build());
-            } else {
-                System.err.println("Location not found: " + location);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return Optional.empty();
+        return webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/search")
+                        .queryParam("format", "json")
+                        .queryParam("addressdetails", "1")
+                        .queryParam("q", encodedLocation)
+                        .build())
+                .header(HttpHeaders.USER_AGENT, "SpringApp")
+                .retrieve()
+                .bodyToMono(String.class)
+                .map(json -> {
+                    try {
+                        JsonNode jsonNode = objectMapper.readTree(json);
+                        if (jsonNode.isArray() && !jsonNode.isEmpty()) {
+                            JsonNode first = jsonNode.get(0);
+                            return LocationResponseDto.builder()
+                                    .latitude(first.get("lat").asDouble())
+                                    .longitude(first.get("lon").asDouble())
+                                    .displayName(first.get("display_name").asText())
+                                    .build();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                })
+                .filter(result -> result != null);
     }
 
 }

@@ -3,6 +3,8 @@ package com.polezhaiev.logistics.service.driver;
 import com.polezhaiev.logistics.dto.driver.DriverRequestDto;
 import com.polezhaiev.logistics.dto.driver.DriverResponseDto;
 import com.polezhaiev.logistics.dto.driver.DriverUpdateLocationRequestDto;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -16,5 +18,5 @@ public interface DriverService {
 
     String deleteById(Long id);
 
-    List<DriverResponseDto> findDriversNearby(String location, double radiusInKm);
+    Flux<DriverResponseDto> findDriversNearby(String location, double radiusInKm);
 }
