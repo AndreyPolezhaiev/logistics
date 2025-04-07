@@ -15,6 +15,8 @@ import java.util.stream.Collectors;
 import com.polezhaiev.logistics.service.driver.location.LocationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Service
 @RequiredArgsConstructor
@@ -74,28 +76,30 @@ public class DriverServiceImpl implements DriverService {
     }
 
     @Override
-    public List<DriverResponseDto> findDriversNearby(String location, double radiusInKm) {
-        LocationResponseDto locData = locationService.getCoordinates(location)
-                .orElseThrow(() -> new RuntimeException("Location not found: " + location));
+    public Flux<DriverResponseDto> findDriversNearby(String location, double radiusInKm) {
+        return locationService.getCoordinates(location)
+                .flatMapMany(locData ->
+                        Flux.fromIterable(driverRepository.findAll())
+                                .flatMap(driver ->
+                                        locationService.getCoordinates(driver.getLocation())
+                                                .flatMap(driverCoords -> {
+                                                    double distance = haversine(
+                                                            locData.getLatitude(), locData.getLongitude(),
+                                                            driverCoords.getLatitude(), driverCoords.getLongitude());
 
-        System.out.println("Found location: " + locData.getDisplayName() +
-                " (" + locData.getLatitude() + ", " + locData.getLongitude() + ")");
-
-        return driverRepository.findAll().stream()
-                .map(driver -> {
-                    LocationResponseDto driverCoords = locationService.getCoordinates(driver.getLocation())
-                            .orElseThrow(() -> new RuntimeException("Invalid location: " + driver.getLocation()));
-
-                    double distance = haversine(locData.getLatitude(), locData.getLongitude(),
-                            driverCoords.getLatitude(), driverCoords.getLongitude());
-
-                    System.out.println("Distance from " + locData.getDisplayName() +
-                            " to " + driver.getLocation() + " is " + distance + " km");
-
-                    return distance <= radiusInKm ? driverMapper.toDto(driver) : null;
-                })
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+                                                    if (distance <= radiusInKm) {
+                                                        return Mono.just(driverMapper.toDto(driver));
+                                                    } else {
+                                                        return Mono.empty();
+                                                    }
+                                                })
+                                                .onErrorResume(e -> {
+                                                    e.printStackTrace();
+                                                    return Mono.empty();
+                                                })
+                                )
+                                .filter(Objects::nonNull)
+                );
     }
 
     private double haversine(double lat1, double lon1, double lat2, double lon2) {
