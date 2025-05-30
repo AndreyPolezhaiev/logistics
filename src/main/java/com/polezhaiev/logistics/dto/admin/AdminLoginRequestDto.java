@@ -12,4 +12,12 @@ public class AdminLoginRequestDto {
 
     @NotBlank(message = "Password is required")
     private String password;
+
+    public AdminLoginRequestDto() {
+    }
+
+    public AdminLoginRequestDto(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
 }
