@@ -12,4 +12,12 @@ public class DriverLoginRequestDto {
 
     @NotBlank(message = "Password is required")
     private String password;
+
+    public DriverLoginRequestDto() {
+    }
+
+    public DriverLoginRequestDto(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
 }

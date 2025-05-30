@@ -12,4 +12,12 @@ public class BrokerLoginRequestDto {
 
     @NotBlank(message = "Password is required")
     private String password;
+
+    public BrokerLoginRequestDto() {
+    }
+
+    public BrokerLoginRequestDto(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
 }

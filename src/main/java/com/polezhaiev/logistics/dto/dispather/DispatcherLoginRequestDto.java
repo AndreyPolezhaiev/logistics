@@ -12,4 +12,12 @@ public class DispatcherLoginRequestDto {
 
     @NotBlank(message = "Password is required")
     private String password;
+
+    public DispatcherLoginRequestDto() {
+    }
+
+    public DispatcherLoginRequestDto(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
 }
